@@ -1,0 +1,47 @@
+﻿@page "/winkel"
+@using Winkeltje.Components.Pages
+
+<h1>Mijn webshop</h1>
+@foreach (Product product in producten)
+{
+    <div>
+        <h3>@product.Naam</h3>
+        <p>Prijs: @product.Prijs.ToString("C")</p>
+        <p>@product.Beschrijving</p>
+        <img src="@product.Afbeelding" alt="@product.Naam" width="200" />
+        <p>Voorraad: @product.Voorraad stuks</p>
+    </div>
+}
+
+@code {
+    private List<Product> producten = new List<Product>
+    {
+        new Product
+        {
+            Id = 1,
+            Naam = "Draadloze muis",
+            Beschrijving = "Comfortabele draadloze muis.",
+            Prijs = 19.95m,
+            Voorraad = 2,
+            Afbeelding = "images/muis.jpg"
+        },
+        new Product
+        {
+            Id = 2,
+            Naam = "Mechanical keyboard",
+            Beschrijving = "Mechanisch toetsenbord.",
+            Prijs = 79.95m,
+            Voorraad = 5,
+            Afbeelding = "images/keyboard.jpg"
+        },
+        new Product
+        {
+            Id = 3,
+            Naam = "144Hz monitor",
+            Beschrijving = "Full ultra HD-monitor met 144Hz.",
+            Prijs = 149.95m,
+            Voorraad = 2,
+            Afbeelding = "images/monitor.jpg"
+        }
+    };
+}
