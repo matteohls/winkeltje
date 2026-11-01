@@ -1,7 +1,9 @@
 ﻿@page "/winkel"
+@rendermode InteractiveServer
 @using Winkeltje.Components.Pages
 
 <h1>Mijn webshop</h1>
+<h2>Producten</h2>
 @foreach (Product product in producten)
 {
     <div>
@@ -10,17 +12,24 @@
         <p>@product.Beschrijving</p>
         <img src="@product.Afbeelding" alt="@product.Naam" width="200" />
         <p>Voorraad: @product.Voorraad stuks</p>
+        <button @onclick="@(() => VoegToe(product))">Toevoegen aan winkelmandje</button>
     </div>
+}
+<h2>Winkelmandje</h2>
+@foreach (WinkelmandItem item in winkelmand)
+{
+    <p>@item.Product.Naam - Aantal: @item.Aantal</p>
 }
 
 @code {
+    private List<WinkelmandItem> winkelmand = new List<WinkelmandItem>();
     private List<Product> producten = new List<Product>
     {
         new Product
         {
             Id = 1,
             Naam = "Draadloze muis",
-            Beschrijving = "Comfortabele draadloze muis.",
+            Beschrijving = "Comfortabele ergonomische draadloze muis.",
             Prijs = 19.95m,
             Voorraad = 2,
             Afbeelding = "images/muis.jpg"
@@ -29,7 +38,7 @@
         {
             Id = 2,
             Naam = "Mechanical keyboard",
-            Beschrijving = "Mechanisch toetsenbord.",
+            Beschrijving = "Mechanisch toetsenbord (qwerty) met rgb",
             Prijs = 79.95m,
             Voorraad = 5,
             Afbeelding = "images/keyboard.jpg"
@@ -44,4 +53,29 @@
             Afbeelding = "images/monitor.jpg"
         }
     };
+    private void VoegToe(Product product)
+    {
+        WinkelmandItem item = winkelmand.Find(x => x.Product.Id == product.Id);
+        if (product.Voorraad <= 0)
+        {
+            return;
+        }
+
+        if (item == null)
+        {
+            winkelmand.Add(new WinkelmandItem
+            {
+                Product = product,
+                Aantal = 1
+            });
+            product.Voorraad--;
+        }
+        else
+        {
+            if (item.Aantal < product.Voorraad)
+            {
+                item.Aantal++;
+            }
+        }
+    }
 }
