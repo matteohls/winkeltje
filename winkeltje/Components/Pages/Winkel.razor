@@ -3,33 +3,57 @@
 @using Winkeltje.Components.Pages
 
 <h1>Mijn webshop</h1>
+
 <h2>Producten</h2>
+
 @foreach (Product product in producten)
 {
     <div>
         <h3>@product.Naam</h3>
         <p>Prijs: @product.Prijs.ToString("C")</p>
         <p>@product.Beschrijving</p>
+
         <img src="@product.Afbeelding" alt="@product.Naam" width="200" />
+
         <p>Voorraad: @product.Voorraad stuks</p>
-        <button @onclick="@(() => VoegToe(product))">Toevoegen aan winkelmandje</button>
+
+        <button @onclick="@(() => VoegToe(product))"
+                disabled="@(product.Voorraad <= 0)">
+            Toevoegen aan winkelmandje
+        </button>
     </div>
 }
+
 <h2>Winkelmandje</h2>
-@foreach (WinkelmandItem item in winkelmand)
+
+@if (winkelmand.Count == 0)
 {
-    <p>@item.Product.Naam - Aantal: @item.Aantal</p>
+    <p>Je winkelmandje is nog leeg.</p>
+}
+else
+{
+    @foreach (WinkelmandItem item in winkelmand)
+    {
+        <p>
+            @item.Product.Naam -
+            Aantal: @item.Aantal -
+            Subtotaal: @((item.Product.Prijs * item.Aantal).ToString("C"))
+        </p>
+    }
+
+    <h3>Totaal: @BerekenTotaal().ToString("C")</h3>
 }
 
 @code {
     private List<WinkelmandItem> winkelmand = new List<WinkelmandItem>();
+
     private List<Product> producten = new List<Product>
     {
         new Product
         {
             Id = 1,
             Naam = "Draadloze muis",
-            Beschrijving = "Comfortabele ergonomische draadloze muis.",
+            Beschrijving = "Ergonomische draadloze muis met een usb aansluiting voor uw laptop of pc.",
             Prijs = 19.95m,
             Voorraad = 2,
             Afbeelding = "images/muis.jpg"
@@ -53,9 +77,11 @@
             Afbeelding = "images/monitor.jpg"
         }
     };
+
     private void VoegToe(Product product)
     {
         WinkelmandItem item = winkelmand.Find(x => x.Product.Id == product.Id);
+
         if (product.Voorraad <= 0)
         {
             return;
@@ -68,14 +94,25 @@
                 Product = product,
                 Aantal = 1
             });
+
             product.Voorraad--;
         }
         else
         {
-            if (item.Aantal < product.Voorraad)
-            {
-                item.Aantal++;
-            }
+            item.Aantal++;
+            product.Voorraad--;
         }
+    }
+
+    private decimal BerekenTotaal()
+    {
+        decimal totaal = 0;
+
+        foreach (WinkelmandItem item in winkelmand)
+        {
+            totaal += item.Product.Prijs * item.Aantal;
+        }
+
+        return totaal;
     }
 }
