@@ -1,5 +1,28 @@
-﻿<h3>ProductLijst</h3>
+﻿@using Winkeltje.Components.Pages
+
+<h2>Producten</h2>
+
+@foreach (Product product in Producten)
+{
+    <div>
+        <img src="@product.Afbeelding" alt="@product.Naam" width="150" />
+
+        <h3>@product.Naam</h3>
+
+        <p>Prijs: @product.Prijs.ToString("C")</p>
+
+        <p>Voorraad: @product.Voorraad stuks</p>
+
+        <button @onclick="() => OnProductGeselecteerd.InvokeAsync(product)">
+            Bekijk product
+        </button>
+    </div>
+}
 
 @code {
+    [Parameter]
+    public List<Product> Producten { get; set; } = new List<Product>();
 
-}
+    [Parameter]
+    public EventCallback<Product> OnProductGeselecteerd { get; set; }
+}   
