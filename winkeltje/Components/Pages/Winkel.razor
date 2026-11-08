@@ -10,7 +10,7 @@
 {
     <div>
         <h3>@product.Naam</h3>
-        <p>Prijs: @product.Prijs.ToString("C")</p>
+        <p>Prijs: @product.Prijs.ToString("C", new System.Globalization.CultureInfo("nl-BE"))</p>
         <p>@product.Beschrijving</p>
 
         <img src="@product.Afbeelding" alt="@product.Naam" width="200" />
@@ -37,11 +37,11 @@ else
         <p>
             @item.Product.Naam -
             Aantal: @item.Aantal -
-            Subtotaal: @((item.Product.Prijs * item.Aantal).ToString("C"))
+            Subtotaal: @((item.Product.Prijs * item.Aantal).ToString("C", new System.Globalization.CultureInfo("nl-BE")))
         </p>
     }
 
-    <h3>Totaal: @BerekenTotaal().ToString("C")</h3>
+    <h3>Totaal: @BerekenTotaal().ToString("C", new System.Globalization.CultureInfo("nl-BE"))</h3>
 }
 
 @code {
@@ -73,7 +73,7 @@ else
             Naam = "144Hz monitor",
             Beschrijving = "Full ultra HD-monitor met 144Hz.",
             Prijs = 149.95m,
-            Voorraad = 2,
+            Voorraad = 20,
             Afbeelding = "images/monitor.jpg"
         }
     };
